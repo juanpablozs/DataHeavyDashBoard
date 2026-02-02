@@ -1,12 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { useUrlState, urlStateHelpers } from '@/lib/urlState';
 
-// Wrapper for router context
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <BrowserRouter>{children}</BrowserRouter>
-);
+// Wrapper for router context - use MemoryRouter for isolated test state
+function createWrapper() {
+  return ({ children }: { children: React.ReactNode }) => (
+    <MemoryRouter>{children}</MemoryRouter>
+  );
+}
 
 describe('useUrlState', () => {
   it('should initialize with default values', () => {
@@ -16,7 +18,7 @@ describe('useUrlState', () => {
           page: { default: 1, ...urlStateHelpers.number },
           search: { default: '' },
         }),
-      { wrapper }
+      { wrapper: createWrapper() }
     );
 
     expect(result.current.params.page).toBe(1);
@@ -29,7 +31,7 @@ describe('useUrlState', () => {
         useUrlState({
           page: { default: 1, ...urlStateHelpers.number },
         }),
-      { wrapper }
+      { wrapper: createWrapper() }
     );
 
     act(() => {
@@ -45,7 +47,7 @@ describe('useUrlState', () => {
         useUrlState({
           status: { default: [], ...urlStateHelpers.stringArray },
         }),
-      { wrapper }
+      { wrapper: createWrapper() }
     );
 
     act(() => {
@@ -62,7 +64,7 @@ describe('useUrlState', () => {
           page: { default: 1, ...urlStateHelpers.number },
           search: { default: '' },
         }),
-      { wrapper }
+      { wrapper: createWrapper() }
     );
 
     act(() => {
